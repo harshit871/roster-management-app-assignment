@@ -2,7 +2,11 @@ import FilterChip from './FilterChip';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setFilter, clearFilters } from '../../store/filterSlice';
 
-const FilterBar: React.FC = () => {
+import type { Option } from './FilterChip';
+
+interface FilterBarProps { centerOptions: Option[]; }
+
+const FilterBar: React.FC<FilterBarProps> = ({ centerOptions }) => {
   const dispatch = useAppDispatch();
   const { services, types, centers, searchText } = useAppSelector((state) => state.filter);
 
@@ -23,7 +27,7 @@ const FilterBar: React.FC = () => {
         />
         <FilterChip
           label="Centers"
-          options={[]} /* derive from data at runtime */
+          options={centerOptions}
           selected={centers}
           onChange={(val) => dispatch(setFilter({ key: 'centers', value: val }))}
         />

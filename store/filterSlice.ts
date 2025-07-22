@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface FilterState {
+export interface FilterState {
   services: string[];
   types: string[];
   centers: string[];

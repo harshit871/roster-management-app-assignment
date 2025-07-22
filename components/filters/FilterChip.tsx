@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface Option { key: string; label: string; }
+export interface Option { key: string; label: string; }
 interface FilterChipProps {
   label: string;
   options: Option[];
