@@ -3,7 +3,7 @@ import { FilterState } from '../store/filterSlice';
 
 // Returns providers filtered by all active filters
 export function filterProviders(providers: Provider[], filters: FilterState): Provider[] {
-  const { services, types, centers, searchText } = filters;
+  const { services, types, centers, searchText  = ''} = filters;
 
   return providers.filter((p) => {
     // Service filter: use provider_usertype e.g., 'therapist', 'psychiatrist'
