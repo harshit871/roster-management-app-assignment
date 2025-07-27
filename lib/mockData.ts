@@ -20,7 +20,7 @@ export const sessionEvents: SessionEvent[] = [
         provider_id: 101,
         start_time: "10:00",
         end_time: "10:45",
-        date: currentWeekDates[1], // Tuesday
+        date: currentWeekDates[1],
         status: "active",
         location_type: "online",
         patient_name: "John Doe",
@@ -33,7 +33,7 @@ export const sessionEvents: SessionEvent[] = [
         provider_id: 101,
         start_time: "14:00",
         end_time: "15:00",
-        date: currentWeekDates[2], // Wednesday
+        date: currentWeekDates[2],
         status: "active",
         location_type: "offline",
     },
@@ -44,7 +44,7 @@ export const sessionEvents: SessionEvent[] = [
         provider_id: 101,
         start_time: "11:00",
         end_time: "12:00",
-        date: currentWeekDates[3], // Thursday
+        date: currentWeekDates[3],
         status: "active",
         location_type: "online",
     },

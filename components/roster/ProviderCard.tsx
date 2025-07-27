@@ -13,11 +13,11 @@ const ProviderCard: React.FC<ProviderCardProps> = ({ provider, showFullSlots = f
   const { id, name, image, clinic_details, availabilities, provider_usertype, is_inhouse } = provider;
   const router = useRouter();
   
-  // Get today's availability or the first available date
+
   const todayStr = new Date().toISOString().split('T')[0];
   const currentAvailability = availabilities.find(a => a.date === todayStr) || availabilities[0];
   
-  // Calculate total available and booked slots
+
   const totalAvailable = currentAvailability ? 
     currentAvailability.online_slots.length + 
     currentAvailability.offline_slots.length + 
@@ -38,7 +38,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({ provider, showFullSlots = f
 
   return (
     <div className="flex items-start p-4 border rounded-lg hover:shadow-md transition-shadow bg-white">
-      {/* Provider Image */}
+
       <div className="flex-shrink-0 mr-4">
         <img 
           src={image} 
@@ -47,9 +47,9 @@ const ProviderCard: React.FC<ProviderCardProps> = ({ provider, showFullSlots = f
         />
       </div>
       
-      {/* Provider Details */}
+
       <div className="flex-1 min-w-0">
-        {/* Name and basic info */}
+
         <div className="mb-2">
           <h3 
             className="font-semibold text-lg hover:underline cursor-pointer text-gray-900 truncate"
@@ -72,7 +72,6 @@ const ProviderCard: React.FC<ProviderCardProps> = ({ provider, showFullSlots = f
           </div>
         </div>
 
-        {/* Availability Stats */}
         <div className="flex items-center space-x-4 text-sm text-gray-600 mb-3">
           <div className="flex items-center">
             <ClockIcon size={14} className="mr-1" />
@@ -84,7 +83,6 @@ const ProviderCard: React.FC<ProviderCardProps> = ({ provider, showFullSlots = f
           </div>
         </div>
         
-        {/* Slots Display */}
         {currentAvailability && (
           <div className="mb-3">
             <div className="text-xs text-gray-500 mb-1">
@@ -104,7 +102,6 @@ const ProviderCard: React.FC<ProviderCardProps> = ({ provider, showFullSlots = f
         )}
       </div>
       
-      {/* View Calendar Button */}
       <div className="flex-shrink-0 ml-4">
         <button
           className="px-4 py-2 text-orange-600 hover:text-orange-700 hover:bg-orange-50 rounded-md transition-colors border border-orange-200 hover:border-orange-300 font-medium"

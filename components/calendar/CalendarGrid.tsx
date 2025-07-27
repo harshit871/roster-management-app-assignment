@@ -275,9 +275,9 @@ const SlotsView: React.FC<{
                                                         provider.id
                                                     )
                                                 }
-                                                className="text-[#E76943] hover:text-orange-700 font-medium self-start text-sm underline"
+                                                className="text-[#E76943] hover:text-orange-700 font-medium self-start text-sm underline cursor-pointer"
                                             >
-                                                View Calendar
+                                               View Calendar →
                                             </button>
                                         </div>
                                     </div>
