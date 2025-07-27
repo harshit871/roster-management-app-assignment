@@ -1,167 +1,141 @@
 import React from "react";
-import { Tooltip } from "react-tooltip";
 import {
     BookedSlot,
     BlockedSlot,
     SessionEvent,
+    SlotStatus,
+    SLOT_COLORS,
 } from "../../lib/types";
-import { VideoIcon, MapPinIcon, CalendarIcon } from "lucide-react";
+import { VideoIcon, MapPinIcon } from "lucide-react";
+import Tooltip from "../ui/Tooltip";
 
 interface SlotCellProps {
     time: string;
-    online: boolean;
-    offline: boolean;
-    both: boolean;
+    online?: boolean;
+    offline?: boolean;
+    both?: boolean;
     blocked?: BlockedSlot;
     bookedOnline?: BookedSlot;
     bookedOffline?: BookedSlot;
     event?: SessionEvent;
+    isTopRow?: boolean;
 }
 
 const SlotCell: React.FC<SlotCellProps> = ({
     time,
-    online,
-    offline,
-    both,
+    online = false,
+    offline = false,
+    both = false,
     blocked,
     bookedOnline,
     bookedOffline,
     event,
+    isTopRow = false,
 }) => {
     const getSlotDisplay = () => {
-        // Priority: blocked > booked > available
+        let status: SlotStatus = "available";
+        let content: React.ReactNode = time;
+        let tooltip = `${time} - Available`;
+
         if (blocked) {
-            return {
-                bgClass: "bg-red-100 border-red-200 text-red-800",
-                content: (
-                    <div className="p-2 text-center">
-                        <div className="text-xs font-medium truncate">
-                            {blocked.reason}
-                        </div>
+            status = "blocked";
+            content = time;
+            tooltip = `${time} - Blocked: ${blocked.reason}`;
+        } else if (bookedOnline) {
+            status = "booked_online";
+            content = (
+                <div className="text-center w-full ">
+                    <div className="text-xs font-bold leading-tight">
+                        #{bookedOnline.session_id}
                     </div>
-                ),
-                tooltip: `Blocked: ${blocked.reason}${
-                    blocked.description ? ` - ${blocked.description}` : ""
-                }`,
-            };
-        }
-
-        const bookedSlot = bookedOnline || bookedOffline;
-        const isOnlineBooked = Boolean(bookedOnline);
-
-        if (bookedSlot || event) {
-            const sessionId = event?.id || bookedSlot?.session_id || "";
-            const patientName =
-                event?.patient_name || bookedSlot?.patient_name || "";
-            const eventTitle = event?.title || bookedSlot?.type || "Session";
-            const locationType =
-                event?.location_type || (isOnlineBooked ? "online" : "offline");
-
-            const bgClass =
-                isOnlineBooked || locationType === "online"
-                    ? "bg-blue-600 text-white border-blue-700"
-                    : locationType === "offline"
-                    ? "bg-orange-600 text-white border-orange-700"
-                    : "bg-purple-600 text-white border-purple-700";
-
-            return {
-                bgClass,
-                content: (
-                    <div className="p-2 space-y-1 min-h-[50px]">
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold">
-                                #{sessionId}
-                            </span>
-                            {locationType === "online" ? (
-                                <VideoIcon size={12} />
-                            ) : locationType === "offline" ? (
-                                <MapPinIcon size={12} />
-                            ) : (
-                                <CalendarIcon size={12} />
-                            )}
-                        </div>
-                        <div className="text-xs font-medium truncate">
-                            {eventTitle}
-                        </div>
-                        {patientName && (
-                            <div className="text-xs opacity-90 truncate">
-                                {patientName}
+                    {event && (
+                        <>
+                            <div className="text-xs truncate leading-tight mt-0.5">
+                                {event.title}
                             </div>
-                        )}
-                    </div>
-                ),
-                tooltip: `${eventTitle} - ${
-                    patientName || sessionId
-                } (${locationType})`,
-            };
-        }
-
-        // Available slots
-        if (both) {
-            return {
-                bgClass:
-                    "bg-blue-100 border-blue-200 text-blue-800 hover:bg-blue-200",
-                content: (
-                    <div className="p-2 text-center">
-                        <div className="text-xs">{time}</div>
-                    </div>
-                ),
-                tooltip: "Available for both online and offline",
-            };
-        }
-
-        if (offline) {
-            return {
-                bgClass:
-                    "bg-orange-100 border-orange-200 text-orange-800 hover:bg-orange-200",
-                content: (
-                    <div className="p-2 text-center">
-                        <div className="text-xs">{time}</div>
-                    </div>
-                ),
-                tooltip: "Available for offline consultation",
-            };
-        }
-
-        if (online) {
-            return {
-                bgClass:
-                    "bg-green-100 border-green-200 text-green-800 hover:bg-green-200",
-                content: (
-                    <div className="p-2 text-center">
-                        <div className="text-xs">{time}</div>
-                    </div>
-                ),
-                tooltip: "Available for online consultation",
-            };
-        }
-
-        // Default available slot
-        return {
-            bgClass:
-                "bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100",
-            content: (
-                <div className="p-2 text-center">
-                    <div className="text-xs">{time}</div>
+                            {event.patient_name && (
+                                <div className="text-xs truncate leading-tight opacity-90">
+                                    {event.patient_name}
+                                </div>
+                            )}
+                        </>
+                    )}
+                    <VideoIcon size={8} className="mx-auto mt-0.5" />
                 </div>
-            ),
-            tooltip: "Time slot",
-        };
+            );
+            tooltip = `${time} - Online Session #${bookedOnline.session_id}${
+                event ? ` - ${event.title}` : ""
+            }${event?.patient_name ? ` with ${event.patient_name}` : ""}`;
+        } else if (bookedOffline) {
+            status = "booked_offline";
+            content = (
+                <div className="text-center w-full">
+                    <div className="text-xs font-bold leading-tight">
+                        #{bookedOffline.session_id}
+                    </div>
+                    {event && (
+                        <>
+                            <div className="text-xs truncate leading-tight mt-0.5">
+                                {event.title}
+                            </div>
+                            {event.patient_name && (
+                                <div className="text-xs truncate leading-tight opacity-90">
+                                    {event.patient_name}
+                                </div>
+                            )}
+                        </>
+                    )}
+                    <MapPinIcon size={8} className="mx-auto mt-0.5" />
+                </div>
+            );
+            tooltip = `${time} - Offline Session #${bookedOffline.session_id}${
+                event ? ` - ${event.title}` : ""
+            }${event?.patient_name ? ` with ${event.patient_name}` : ""}`;
+        } else if (both) {
+            status = "both";
+            content = <div className="text-xs font-medium">{time}</div>;
+            tooltip = `${time} - Available for both online and offline`;
+        } else if (online) {
+            status = "online";
+            content = <div className="text-xs font-medium">{time}</div>;
+            tooltip = `${time} - Available online only`;
+        } else if (offline) {
+            status = "offline";
+            content = <div className="text-xs font-medium">{time}</div>;
+            tooltip = `${time} - Available offline only`;
+        }
+
+        return { status, content, tooltip };
     };
 
-    const { bgClass, content, tooltip } = getSlotDisplay();
+    const { status, content, tooltip } = getSlotDisplay();
+    const colorClass = SLOT_COLORS[status];
+
+    const tooltipPosition = isTopRow ? "bottom" : "top";
 
     return (
-        <>
+        <Tooltip content={tooltip} position={tooltipPosition}>
             <div
-                className={`${bgClass} border rounded cursor-pointer transition-all duration-200 transform hover:scale-105 w-full h-full min-h-[50px]`}
-                data-tooltip-id={`slot-${time}`}
-                data-tooltip-content={tooltip}
+                className={`
+                    relative min-h-8 max-h-fit rounded-lg px-0.5 py-0.5 text-xs font-medium cursor-pointer
+                    transition-all duration-200 hover:shadow-sm hover:scale-105
+                    flex flex-col items-center justify-center
+                    border border-white/20
+                    ${colorClass}
+                    ${
+                        bookedOnline || bookedOffline
+                            ? "ring-1 ring-white/30"
+                            : ""
+                    }
+                `}
             >
                 {content}
+
+                {(bookedOnline || bookedOffline) && (
+                    <div className="absolute top-0.5 right-0.5 w-1 h-1 bg-white/70 rounded-full"></div>
+                )}
             </div>
-            <Tooltip id={`slot-${time}`} place="top" className="z-50" />
-        </>
+        </Tooltip>
     );
 };
 

@@ -98,15 +98,26 @@ export const TIME_SLOTS = [
     "17:45",
 ];
 
+// Updated color mapping to match the new design
 export const SLOT_COLORS = {
     available: "bg-gray-100 text-gray-700",
-    online: "bg-green-100 text-green-800",
-    offline: "bg-orange-100 text-orange-800",
-    both: "bg-blue-100 text-blue-800",
-    booked_online: "bg-blue-600 text-white",
-    booked_offline: "bg-orange-600 text-white",
-    blocked: "bg-red-100 text-red-800",
+    online: "bg-[#97CC55] text-white",
+    offline: "bg-[#E76943] text-white",
+    both: "bg-[#5AA9E8] text-white",
+    booked_online: "bg-[#355E80] text-white",
+    booked_offline: "bg-[#80490B] text-white",
+    blocked: "bg-[#C73031] text-white",
 };
+
+// Legend configuration for reusability
+export const LEGEND_ITEMS = [
+    { key: "online", label: "Online", color: "#97CC55" },
+    { key: "offline", label: "Offline", color: "#E76943" },
+    { key: "both", label: "Online+Offline", color: "#5AA9E8" },
+    { key: "booked_online", label: "Online Booked", color: "#355E80" },
+    { key: "booked_offline", label: "Offline Booked", color: "#80490B" },
+    { key: "blocked", label: "Blocked", color: "#C73031" },
+];
 
 export interface FilterOption {
     key: string;

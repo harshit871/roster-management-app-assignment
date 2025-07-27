@@ -1,6 +1,7 @@
 import React from "react";
+import { ChevronDownIcon } from "lucide-react";
 
-type Option = {
+export interface Option {
     key: string;
     label: string;
 }
@@ -10,58 +11,82 @@ interface FilterSelectProps {
     options: Option[];
     selected: string[];
     onChange: (vals: string[]) => void;
-    multiple?: boolean;
+    placeholder?: string;
 }
 
-const FilterSelect = ({ label, options, selected, onChange, multiple }: FilterSelectProps) => {
+const FilterSelect: React.FC<FilterSelectProps> = ({
+    label,
+    options,
+    selected,
+    onChange,
+    placeholder = "Enter Text",
+}) => {
+    const handleSelectChange = (
+        event: React.ChangeEvent<HTMLSelectElement>
+    ) => {
+        const value = event.target.value;
+        if (value && !selected.includes(value)) {
+            onChange([...selected, value]);
+        }
+    };
+
+    const removeSelection = (valueToRemove: string) => {
+        onChange(selected.filter((val) => val !== valueToRemove));
+    };
+
+    const selectedLabels = selected.map(
+        (val) => options.find((opt) => opt.key === val)?.label || val
+    );
+
     return (
-        <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-gray-700">
+        <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
                 {label}
             </label>
-            <select
-                value={selected}
-                onChange={(e) =>
-                    onChange(
-                        multiple
-                            ? Array.from(e.target.selectedOptions, (o) => o.value)
-                            : [e.target.value]
-                    )
-                }
-                multiple={multiple}
-                className="
-                    w-full
-                    rounded-lg
-                    border
-                    border-gray-300
-                    bg-white
-                    px-4
-                    py-2
-                    text-gray-700
-                    shadow-sm
-                   focus:ring-orange-200 focus:border-orange-400
-                    focus:outline-none
-                    appearance-none
-                "
-                style={{
-                    backgroundImage:
-                        "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E\")",
-                    backgroundRepeat: "no-repeat",
-                    backgroundPosition: "right 0.75rem center",
-                    backgroundSize: "1.5em 1.5em",
-                }}
-            >
-                {!multiple && (
-                    <option value="" disabled hidden>
-                        Enter Text
+
+            {/* Selected items display */}
+            {selected.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-2">
+                    {selectedLabels.map((label, index) => (
+                        <span
+                            key={index}
+                            className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-md"
+                        >
+                            {label}
+                            <button
+                                onClick={() => removeSelection(selected[index])}
+                                className="ml-1 text-blue-600 hover:text-blue-800"
+                            >
+                                ×
+                            </button>
+                        </span>
+                    ))}
+                </div>
+            )}
+
+            {/* Dropdown */}
+            <div className="relative">
+                <select
+                    value=""
+                    onChange={handleSelectChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-700 focus:ring-2 focus:ring-orange-200 focus:border-orange-400 transition-colors outline-none appearance-none cursor-pointer"
+                >
+                    <option value="" disabled className="text-gray-400">
+                        {placeholder}
                     </option>
-                )}
-                {options.map((opt) => (
-                    <option key={opt.key} value={opt.key}>
-                        {opt.label}
-                    </option>
-                ))}
-            </select>
+                    {options
+                        .filter((option) => !selected.includes(option.key))
+                        .map((option) => (
+                            <option key={option.key} value={option.key}>
+                                {option.label}
+                            </option>
+                        ))}
+                </select>
+                <ChevronDownIcon
+                    size={16}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
+                />
+            </div>
         </div>
     );
 };
