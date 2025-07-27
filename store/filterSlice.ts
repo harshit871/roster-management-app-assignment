@@ -4,10 +4,10 @@ export interface FilterState {
   services: string[];
   types: string[];
   centers: string[];
-  searchText: string;
+  searchText?: string;
 }
 
-const initialState: FilterState = { services: [], types: [], centers: [], searchText: '' };
+const initialState: FilterState = { services: [], types: [], centers: [] };
 
 const filterSlice = createSlice({
   name: 'filters',
