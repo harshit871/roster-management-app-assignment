@@ -24,14 +24,14 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     const id = params?.provider;
     const provider = mockData.find((p) => p.id.toString() === id) || null;
 
-    // Generate next 14 days for more comprehensive view
+
     const dates = Array.from({ length: 14 }).map((_, i) => {
         const date = new Date();
         date.setDate(date.getDate() + i);
-        return date.toISOString(); // Convert to string for serialization
+        return date.toISOString();
     });
 
-    // Map availabilities by date string
+
     const availMap: Record<string, Availability> = {};
     if (provider) {
         provider.availabilities.forEach((availability) => {
@@ -65,7 +65,7 @@ const CalendarPage: NextPage<CalendarPageProps> = ({
 
     return (
         <div className="max-w-7xl mx-auto p-4">
-            {/* Header */}
+
             <div className="mb-6">
                 <button
                     onClick={handleBackToRoster}
@@ -85,7 +85,7 @@ const CalendarPage: NextPage<CalendarPageProps> = ({
                 </div>
             </div>
 
-            {/* Calendar Grid */}
+
             <div className="bg-white">
                 <CalendarGrid
                     dates={dates}

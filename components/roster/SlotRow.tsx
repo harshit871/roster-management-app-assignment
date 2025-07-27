@@ -13,16 +13,16 @@ interface SlotRowProps {
 }
 
 const getSlotStatus = (slot: string, avail: Availability): SlotStatus => {
-    // Check if blocked first
+
     if (avail.blocked_slots.find((b) => b.slot === slot)) return "blocked";
 
-    // Check if booked
+
     if (avail.online_booked_slots.find((b) => b.slot === slot))
         return "booked_online";
     if (avail.offline_booked_slots.find((b) => b.slot === slot))
         return "booked_offline";
 
-    // Check availability types
+
     if (avail.both_slots.includes(slot)) return "both";
     if (avail.offline_slots.includes(slot)) return "offline";
     if (avail.online_slots.includes(slot)) return "online";
